@@ -1,4 +1,4 @@
-const standard_queries = require("../standard_queries/standard_queries");
+const standard_queries = require("../queries/standard_queries");
 
 // Ventas totales por producto
 async function getTotalSalesByProduct(req, res) {
