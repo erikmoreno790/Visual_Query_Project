@@ -3,16 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard BI - Panel de Análisis</title>
+    <title>Reportes - Dashboard BI</title>
     <link rel="stylesheet" href="src/assets/styles.css" />
+    <link rel="stylesheet" href="src/assets/reportes-styles.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   </head>
   <body>
     <!-- Sidebar -->
     <aside id="sidebar" class="sidebar">
       <div class="sidebar-header">
         <div class="logo">
-          <!-- Logo desde public -->
           <img src="public/logo_negle.PNG" alt="Logo" class="logo-image" />
         </div>
         <button id="closeSidebar" class="close-sidebar">
@@ -28,7 +30,7 @@
       </div>
 
       <nav class="sidebar-nav">
-        <a href="index.html" class="nav-item active">
+        <a href="index_updated.html" class="nav-item">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
@@ -39,7 +41,7 @@
           </svg>
           Panel Principal
         </a>
-        <a href="reportes.html" class="nav-item">
+        <a href="reportes.html" class="nav-item active">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
@@ -92,26 +94,7 @@
           </svg>
           Configuración
         </button>
-        <button class="nav-item">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            ></path>
-          </svg>
-          Ayuda
-        </button>
       </nav>
-
-      <div class="sidebar-footer">
-        <div class="help-card">
-          <p class="help-title">¿Necesitas ayuda?</p>
-          <p class="help-text">Explora nuestros tutoriales y guías</p>
-          <button class="help-button">Ver Tutoriales</button>
-        </div>
-      </div>
     </aside>
 
     <!-- Overlay para móvil -->
@@ -145,7 +128,7 @@
               d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
             ></path>
           </svg>
-          <span>Dashboard BI</span>
+          <span>Reportes</span>
         </div>
       </div>
 
@@ -153,95 +136,202 @@
       <header class="dashboard-header">
         <div class="header-content">
           <div class="header-title">
-            <h1>Panel de Análisis</h1>
+            <h1>Reportes Personalizados</h1>
             <p class="header-subtitle">
-              Visualización de métricas y KPIs de ventas
+              Análisis detallado con filtros avanzados
             </p>
           </div>
 
           <div class="header-actions">
-            <div class="select-wrapper">
+            <button id="exportPdfBtn" class="export-button">
               <svg
-                class="select-icon"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                style="width: 20px; height: 20px"
               >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                  d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
                 ></path>
               </svg>
-              <select id="sedeFilter" class="header-select">
-                <option value="all" selected>Todas las sedes</option>
-              </select>
-            </div>
+              <span>PDF</span>
+            </button>
 
-            <div class="select-wrapper">
+            <button
+              id="exportExcelBtn"
+              class="export-button export-button-success"
+            >
               <svg
-                class="select-icon"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                style="width: 20px; height: 20px"
               >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                  d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
                 ></path>
               </svg>
-              <select id="categoryFilter" class="header-select">
-                <option value="all" selected>Todos los productos</option>
-              </select>
-            </div>
-
-            <div class="select-wrapper">
-              <svg
-                class="select-icon"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                ></path>
-              </svg>
-              <select id="periodFilter" class="header-select">
-                <option value="all" selected>Todo el período</option>
-                <option value="7days">Últimos 7 días</option>
-                <option value="30days">Últimos 30 días</option>
-                <option value="90days">Últimos 90 días</option>
-              </select>
-            </div>
-
-            <button id="refreshBtn" class="icon-button" title="Actualizar">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                ></path>
-              </svg>
+              <span>Excel</span>
             </button>
           </div>
         </div>
       </header>
 
+      <!-- Filters Panel -->
+      <div class="filters-panel">
+        <div class="filters-header">
+          <h3 class="filters-title">
+            <svg
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              style="width: 20px; height: 20px"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+              ></path>
+            </svg>
+            Filtros Avanzados
+          </h3>
+          <button id="toggleFilters" class="toggle-filters-btn">
+            <svg
+              id="toggleIcon"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              style="width: 20px; height: 20px"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              ></path>
+            </svg>
+          </button>
+        </div>
+
+        <div id="filtersContent" class="filters-content">
+          <!-- Filtros de fecha -->
+          <div class="filter-section">
+            <h4 class="filter-section-title">Rango de Fechas</h4>
+            <div class="filter-date-group">
+              <div class="filter-group">
+                <label class="filter-label">Fecha Inicio</label>
+                <input type="date" id="fechaInicio" class="filter-input" />
+              </div>
+              <div class="filter-group">
+                <label class="filter-label">Fecha Fin</label>
+                <input type="date" id="fechaFin" class="filter-input" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Filtros con checkboxes -->
+          <div class="filter-section">
+            <h4 class="filter-section-title">Sedes</h4>
+            <div class="checkbox-group" id="sedesCheckboxes">
+              <label class="checkbox-label">
+                <input type="checkbox" value="all" checked /> Todas las sedes
+              </label>
+            </div>
+          </div>
+
+          <div class="filter-section">
+            <h4 class="filter-section-title">Tipos</h4>
+            <div class="checkbox-group" id="tiposCheckboxes">
+              <label class="checkbox-label">
+                <input type="checkbox" value="all" checked /> Todos los tipos
+              </label>
+            </div>
+          </div>
+
+          <div class="filter-section">
+            <h4 class="filter-section-title">Tamaños</h4>
+            <div class="checkbox-group" id="tamanosCheckboxes">
+              <label class="checkbox-label">
+                <input type="checkbox" value="all" checked /> Todos los tamaños
+              </label>
+            </div>
+          </div>
+
+          <div class="filter-section">
+            <h4 class="filter-section-title">Bases</h4>
+            <div class="checkbox-group" id="basesCheckboxes">
+              <label class="checkbox-label">
+                <input type="checkbox" value="all" checked /> Todas las bases
+              </label>
+            </div>
+          </div>
+
+          <!-- Búsqueda de producto -->
+          <div class="filter-section">
+            <h4 class="filter-section-title">Producto</h4>
+            <div class="filter-group">
+              <input
+                type="text"
+                id="productoSearch"
+                class="filter-input"
+                placeholder="Buscar producto..."
+              />
+            </div>
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="filter-actions-sticky">
+            <button id="applyFilters" class="apply-button">
+              <svg
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                style="width: 18px; height: 18px"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                ></path>
+              </svg>
+              Aplicar Filtros
+            </button>
+            <button id="clearFilters" class="clear-button">
+              <svg
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                style="width: 18px; height: 18px"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+              Limpiar Todo
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Dashboard Content -->
       <div class="dashboard-content">
         <!-- KPI Cards -->
         <div class="kpi-grid">
-          <div class="kpi-card">
+          <div class="kpi-card kpi-card-primary">
             <div class="kpi-header">
               <span class="kpi-title">Total Unidades</span>
-              <div class="kpi-icon" style="color: #10b981">
+              <div class="kpi-icon">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     stroke-linecap="round"
@@ -252,25 +342,14 @@
                 </svg>
               </div>
             </div>
-            <div class="kpi-value">0 u</div>
-            <div class="kpi-change positive">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 10l7-7m0 0l7 7m-7-7v18"
-                ></path>
-              </svg>
-              <span>0.0%</span>
-              <span class="kpi-change-text">vs período anterior</span>
-            </div>
+            <div class="kpi-value" id="totalUnidades">0</div>
+            <div class="kpi-subtitle">Unidades ordenadas</div>
           </div>
 
-          <div class="kpi-card">
+          <div class="kpi-card kpi-card-success">
             <div class="kpi-header">
               <span class="kpi-title">Total Productos</span>
-              <div class="kpi-icon" style="color: #3b82f6">
+              <div class="kpi-icon">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     stroke-linecap="round"
@@ -281,25 +360,14 @@
                 </svg>
               </div>
             </div>
-            <div class="kpi-value">0</div>
-            <div class="kpi-change positive">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 10l7-7m0 0l7 7m-7-7v18"
-                ></path>
-              </svg>
-              <span>0.0%</span>
-              <span class="kpi-change-text">vs período anterior</span>
-            </div>
+            <div class="kpi-value" id="totalProductos">0</div>
+            <div class="kpi-subtitle">Productos únicos</div>
           </div>
 
-          <div class="kpi-card">
+          <div class="kpi-card kpi-card-warning">
             <div class="kpi-header">
               <span class="kpi-title">Total Sedes</span>
-              <div class="kpi-icon" style="color: #8b5cf6">
+              <div class="kpi-icon">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     stroke-linecap="round"
@@ -310,48 +378,26 @@
                 </svg>
               </div>
             </div>
-            <div class="kpi-value">0</div>
-            <div class="kpi-change positive">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 10l7-7m0 0l7 7m-7-7v18"
-                ></path>
-              </svg>
-              <span>0.0%</span>
-              <span class="kpi-change-text">vs período anterior</span>
-            </div>
+            <div class="kpi-value" id="totalSedes">0</div>
+            <div class="kpi-subtitle">Ubicaciones activas</div>
           </div>
 
-          <div class="kpi-card">
+          <div class="kpi-card kpi-card-info">
             <div class="kpi-header">
-              <span class="kpi-title">Producto Top</span>
-              <div class="kpi-icon" style="color: #f59e0b">
+              <span class="kpi-title">Promedio Diario</span>
+              <div class="kpi-icon">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                   ></path>
                 </svg>
               </div>
             </div>
-            <div class="kpi-value">0 u</div>
-            <div class="kpi-change positive">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 10l7-7m0 0l7 7m-7-7v18"
-                ></path>
-              </svg>
-              <span>0.0%</span>
-              <span class="kpi-change-text">vs período anterior</span>
-            </div>
+            <div class="kpi-value" id="promedioDiario">0</div>
+            <div class="kpi-subtitle">Unidades por día</div>
           </div>
         </div>
 
@@ -362,12 +408,27 @@
               <div>
                 <h3 class="chart-title">Tendencia de Ventas por Fecha</h3>
                 <p class="chart-subtitle">
-                  Unidades vendidas a lo largo del tiempo
+                  Evolución temporal de unidades ordenadas
                 </p>
               </div>
+              <button class="chart-toggle-btn" data-chart="line">
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  style="width: 16px; height: 16px"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  ></path>
+                </svg>
+              </button>
             </div>
             <div class="chart-container">
-              <canvas id="salesChart"></canvas>
+              <canvas id="trendChart"></canvas>
             </div>
           </div>
 
@@ -375,25 +436,41 @@
             <div class="chart-header">
               <div>
                 <h3 class="chart-title">Distribución por Sede</h3>
-                <p class="chart-subtitle">Porcentaje de ventas por ubicación</p>
+                <p class="chart-subtitle">
+                  Porcentaje de unidades por ubicación
+                </p>
               </div>
             </div>
             <div class="chart-container">
-              <canvas id="categoryChart"></canvas>
+              <canvas id="sedeChart"></canvas>
             </div>
           </div>
         </div>
 
         <!-- Charts Row 2 -->
-        <div class="chart-card">
-          <div class="chart-header">
-            <div>
-              <h3 class="chart-title">Top 10 Productos</h3>
-              <p class="chart-subtitle">Productos más vendidos por unidades</p>
+        <div class="charts-row">
+          <div class="chart-card chart-small">
+            <div class="chart-header">
+              <div>
+                <h3 class="chart-title">Top 10 Productos</h3>
+                <p class="chart-subtitle">Productos más ordenados</p>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="productosChart"></canvas>
             </div>
           </div>
-          <div class="chart-container">
-            <canvas id="revenueChart"></canvas>
+
+          <div class="chart-card chart-large">
+            <div class="chart-header">
+              <div>
+                <h3 class="chart-title">Distribución por Tipo</h3>
+                <p class="chart-subtitle">Análisis por categoría de producto</p>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="tiposChart"></canvas>
+            </div>
           </div>
         </div>
 
@@ -401,40 +478,64 @@
         <div class="table-card">
           <div class="table-header">
             <div>
-              <h3 class="table-title">Detalle de Ventas</h3>
+              <h3 class="table-title">Detalle de Requisiciones</h3>
               <p class="table-subtitle">
-                Top 20 combinaciones de producto y sede
+                Registro completo de unidades ordenadas
               </p>
+            </div>
+            <div class="table-actions">
+              <span class="table-count" id="tableCount">0 registros</span>
+              <button id="downloadTableBtn" class="icon-button">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  ></path>
+                </svg>
+              </button>
             </div>
           </div>
           <div class="table-wrapper">
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Producto</th>
+                  <th>Fecha</th>
                   <th>Sede</th>
+                  <th>Código</th>
+                  <th>Producto</th>
+                  <th>Tipo</th>
+                  <th>Tamaño</th>
+                  <th>Base</th>
                   <th class="text-right">Unidades</th>
-                  <th>Nivel</th>
                 </tr>
               </thead>
-              <tbody id="tableBody">
+              <tbody id="dataTableBody">
                 <tr>
                   <td
-                    colspan="5"
+                    colspan="8"
                     style="text-align: center; padding: 2rem; color: #6b7280"
                   >
-                    Cargando datos...
+                    Aplicar filtros para ver datos...
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
+          <div class="table-pagination" id="pagination">
+            <!-- Paginación generada dinámicamente -->
+          </div>
         </div>
       </div>
     </main>
 
-    <script src="src/js/charts.js"></script>
-    <script type="module" src="src/js/main.js"></script>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+      <div class="loading-spinner"></div>
+    </div>
+
+    <script src="src/js/reportes-charts.js"></script>
+    <script type="module" src="src/js/reportes.js"></script>
   </body>
 </html>
